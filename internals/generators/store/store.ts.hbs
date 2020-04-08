@@ -1,0 +1,101 @@
+import {call, put, takeEvery} from 'redux-saga/effects';
+
+import {get} from '../../../utils/request';
+
+enum {{ properCase name }}ActionEnum {
+REQUEST = 'app/{{ upperCase name }}/REQUEST',
+SUCCESS = 'app/{{ upperCase name }}/SUCCESS',
+FAIL = 'app/{{ upperCase name }}/FAIL'
+}
+
+export interface {{ properCase name }}Init {
+type: {{ properCase name }}ActionEnum.REQUEST;
+}
+export interface {{ properCase name }}Success {
+type: {{ properCase name }}ActionEnum.SUCCESS;
+data: object;
+}
+export interface {{ properCase name }}Fail {
+type: {{ properCase name }}ActionEnum.FAIL;
+err: object;
+}
+
+type {{ properCase name }}Action = {{ properCase name }}Init | {{ properCase name }}Success | {{ properCase name
+}}Fail;
+
+export function {{ lowerCase name }}Init(): {{ properCase name }}Init {
+return {
+type: {{ properCase name }}ActionEnum.REQUEST
+};
+}
+export function {{ lowerCase name }}Success(data: object): {{ properCase name }}Success {
+return {
+type: {{ properCase name }}ActionEnum.SUCCESS,
+data
+};
+}
+export function {{ lowerCase name }}Fail(err: object): {{ properCase name }}Fail {
+return {
+type: {{ properCase name }}ActionEnum.FAIL,
+err
+};
+}
+
+function* {{ lowerCase name }}Request(action: {{ properCase name }}Action) {
+const requestURL = '';
+const requestOpt = {
+// 'X-Auth-Token': action.token,
+};
+
+try {
+const data = yield call(get, requestURL, requestOpt);
+yield put({{ lowerCase name }}Success(data));
+} catch (err) {
+yield put({{ lowerCase name }}Fail(err));
+}
+}
+
+export function* sagas() {
+yield takeEvery({{ properCase name }}ActionEnum.REQUEST, {{ lowerCase name }}Request);
+}
+
+
+export interface {{ properCase name }}State {
+loading: boolean;
+loaded: null | boolean;
+data: null | object;
+}
+
+const initialState: {{ properCase name }}State = {
+loading: false,
+loaded: null,
+data: null
+};
+
+export default (state: {{ properCase name }}State = initialState, action: {{ properCase name }}Action): {{ properCase
+name }}State => {
+switch (action.type) {
+case {{ properCase name }}ActionEnum.REQUEST:
+return {
+...state,
+loading: true
+};
+case {{ properCase name }}ActionEnum.SUCCESS:
+return {
+...state,
+loading: false,
+loaded: true,
+data: {
+...action.data
+}
+};
+case {{ properCase name }}ActionEnum.FAIL:
+return {
+...state,
+loading: false,
+loaded: false
+};
+default:
+return state;
+}
+};

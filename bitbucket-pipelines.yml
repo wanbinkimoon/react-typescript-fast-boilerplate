@@ -1,0 +1,58 @@
+pipelines:
+  default:
+    - step:
+        name: Build artifact
+        image: node:11
+        caches:
+          - node
+        script:
+          - yarn
+          - yarn lint
+          - yarn build
+        artifacts:
+          - dist/*
+
+  branches:
+    master:
+      - step:
+          name: Build Application
+          image: node:11
+          script:
+            - yarn
+            - yarn lint
+            - yarn build
+          artifacts:
+            - dist/*
+      - step:
+          name: Deploy to AWS S3 - Staging
+          trigger: manual
+          deployment: staging
+          script:
+            - pipe: atlassian/aws-s3-deploy:0.4.1
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION: "eu-central-1"
+                S3_BUCKET: "appetitositebucket-editoriale"
+                LOCAL_PATH: "dist"
+    stage/*:
+      - step:
+          name: Build Application
+          image: node:11
+          script:
+            - yarn
+            - yarn lint
+            - yarn build
+          artifacts:
+            - dist/*
+      - step:
+          name: Deploy to AWS S3 - Staging
+          deployment: staging
+          script:
+            - pipe: atlassian/aws-s3-deploy:0.4.1
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION: "eu-central-1"
+                S3_BUCKET: "appetitositebucket-editoriale"
+                LOCAL_PATH: "dist"
