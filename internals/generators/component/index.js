@@ -6,13 +6,12 @@ const componentExists = require('../utils/componentExists');
 
 module.exports = {
   description: 'Add an unconnected component',
-  prompts: [
-    {
+  prompts: [{
       type: 'list',
       name: 'type',
       message: 'Select the type of component',
-      default: 'React.Component',
-      choices: () => ['Stateless Function', 'React.Component']
+      default: 'Class',
+      choices: () => ['Function', 'Class']
     },
     {
       type: 'input',
@@ -21,9 +20,9 @@ module.exports = {
       default: 'Button',
       validate: (value) => {
         if (/.+/.test(value)) {
-          return componentExists(value)
-            ? 'A component or container with this name already exists'
-            : true;
+          return componentExists(value) ?
+            'A component or container with this name already exists' :
+            true;
         }
         return 'The name is required';
       }
@@ -43,8 +42,7 @@ module.exports = {
       }
     }
 
-    const actions = [
-      {
+    const actions = [{
         type: 'add',
         path: '../../src/app/components/{{properCase name}}/index.tsx',
         templateFile: componentTemplate,

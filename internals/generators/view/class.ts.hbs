@@ -8,7 +8,7 @@ type Props = {}
 
 type State = {}
 
-class {{properCase name}} extends React.Component<Props, State> {
+export default class {{properCase name}} extends React.Component<Props, State> {
   public readonly state: State = {};
 
   componentDidMount() {
@@ -27,19 +27,3 @@ class {{properCase name}} extends React.Component<Props, State> {
   );
   }
   }
-
-
-  function mapStateToProps(state: GlobalState) {
-  return {};
-  }
-
-  // function mapDispatchToProps(dispatch) {
-  // return {
-  // homeInit: () => dispatch(homeInit()),
-  // };
-  // }
-
-  export default connect(
-  mapStateToProps,
-  // mapDispatchToProps
-  )({{properCase name}});
